@@ -340,7 +340,7 @@ class Macros {
 	
 	#end
 	
-	macro public static function buildController(resourcePath:String):Array<Field> {
+	macro public static function buildController(resourcePath:String, runtimePath:String = ""):Array<Field> {
 		var pos = haxe.macro.Context.currentPos();
 
 		processModules();
@@ -365,7 +365,13 @@ class Macros {
 			Context.error("XML file not found", Context.currentPos());
 		}
 		
-		var e:Expr = Context.parseInlineString("super(\"" + resourcePath + "\")", Context.currentPos());
+		var e:Expr;
+		if (runtimePath != "") {
+			e = Context.parseInlineString("super(\"" + runtimePath + "\")", Context.currentPos());
+		} else {
+			e = Context.parseInlineString("super(\"" + resourcePath + "\")", Context.currentPos());
+		}
+		
 		ctor.expr = switch(ctor.expr.expr) {
 			case EBlock(el): macro $b{insertExpr(el, 0, e)};
 			case _: macro $b { insertExpr([ctor.expr], 0, e) }
