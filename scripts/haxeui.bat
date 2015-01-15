@@ -10,7 +10,7 @@ IF "%~1"=="submit" GOTO submit
 	echo Building HaxeUI haxelib
 
 	del bin\haxeui.zip
-	scripts\7za a bin/haxeui.zip haxelib.json include.xml assets haxe
+	scripts\7za a bin\haxeui.zip haxelib.json include.xml assets haxe
 GOTO end
 
 :install

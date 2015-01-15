@@ -20,7 +20,6 @@ class Popup extends VBox implements IDraggable {
 	private var _buttonBar:Box;
 	private var _config:Dynamic;
 	private var _fn:Dynamic->Void;
-	private var _buttonBox:HBox;
 	
 	/**
 	 Creates a new popup
@@ -105,16 +104,17 @@ class Popup extends VBox implements IDraggable {
 		_content.percentWidth = 100;
 		//_content.percentHeight = 100;
 		addChild(_content);
+
 		if (_config.buttons.length > 0) {
-			if (_buttonBox == null) {
-				createButtonBox();
-			}
+			var box:HBox = new HBox();
+			box.horizontalAlign = _buttonBar.horizontalAlign;
 			var buttons:Array<PopupButtonInfo> = cast _config.buttons;
+			_buttonBar.addChild(box);
 			for (info in buttons) {
 				if (info.type & PopupButton.CUSTOM != PopupButton.CUSTOM) {
 					var button:Button = createStandardButton(info.type);
 					if (button != null) {
-						_buttonBox.addChild(button);
+						box.addChild(button);
 					}
 				} else {
 					var button:Button = new Button();
@@ -122,10 +122,10 @@ class Popup extends VBox implements IDraggable {
 					button.addEventListener(MouseEvent.CLICK, function(e) {
 						clickButton(info.type);
 					});
-					_buttonBox.addChild(button);
+					box.addChild(button);
 				}
 			}
-			
+			addChild(_buttonBar);
 		}
 		
 		if (_config.width != null) {
@@ -133,32 +133,6 @@ class Popup extends VBox implements IDraggable {
 		}
 		
 		PopupManager.instance.centerPopup(this);
-	}
-	
-	private function createButtonBox() {
-		_buttonBox = new HBox();
-		_buttonBox.horizontalAlign = _buttonBar.horizontalAlign;
-		_buttonBar.addChild(_buttonBox);
-		addChild(_buttonBar);
-	}
-	
-	/**
-	 * @param	b
-	 * @param	hidesPopup	If a button type is assigned, this button will behave as other popup buttons, closing the popup 
-	 * 						and calling the popup button clicked callback.
-	 */
-	public function addCustomButton(button:Button, buttonType:Int = -1) {
-		if (_buttonBox == null) {
-			createButtonBox();
-		}
-		
-		if (buttonType != -1) {
-			button.addEventListener(MouseEvent.CLICK, function(e) {
-				clickButton(buttonType);
-			});
-		}
-		
-		_buttonBox.addChild(button);
 	}
 	
 	//******************************************************************************************
