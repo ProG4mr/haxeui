@@ -8,9 +8,9 @@
 -lib hscript
 -D doc
 -D doc-gen
--cp .
+-cp ../
 
--xml docs/haxe-ui-toolkit.xml
+-xml ../docs/haxe-ui-toolkit.xml
 --macro include('haxe.ui')
 
 --next
